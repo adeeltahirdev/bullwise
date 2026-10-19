@@ -1,7 +1,11 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
+import {auth} from '../config/firebase.js'
+import {createUserWithEmailAndPassword, sendEmailVerification, updateProfile} from 'firebase/auth'
 
 function Register () {
+
+    const [loading, setLoading] = useState(false)
 
     const [error, setError] = useState('')
     const [firstName, setFirstName] = useState('')
@@ -50,6 +54,43 @@ function Register () {
             return
         }
 
+        try {
+            setLoading(true)
+
+            const userCredential = await createUserWithEmailAndPassword(
+                auth,
+                email.trim(),
+                password
+            )
+
+            await updateProfile(userCredential.user, {
+                displayName: `${firstName.trim()} ${lastName.trim()}`
+            })
+
+            await sendEmailVerification(userCredential.user)
+
+            window.location.assign('/verify-email')
+        }
+        catch (error) {
+            console.error('Registration failed:', error.code)
+
+            const message = {
+                'auth/email-already-in-use': 'An account already exists with this email',
+                'auth/invalid-email': 'Please enter a valid email address',
+                'auth/weak-password': 'Please choose a stronger password',
+                'auth/operation-not-allowed': 'Email/password registration is not enabled in Firebase',
+                'auth/too-many-requests': 'Too many attempts. Please try again later'
+            }
+
+            setError(
+                message[error.code] || 
+                'Unable to create your account. Please try again'
+            )
+        }
+        finally {
+            setLoading(false)
+        }
+
 
     }
 
@@ -84,8 +125,12 @@ function Register () {
                     <input required name="confirm-password" type="password" className="input" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}/>
                     <span>Confirm password</span>
                 </label>
+
                 {error && <p className="error-message">{error}</p>}
-                <button className="submit">Register</button>
+
+                <button className="submit" type="submit" disabled={loading}>
+                    {loading ? 'Creating account...' : 'Register'}
+                </button>
                 <p className="signin">Already have an acount ? <Link to='/login'>Signin</Link> </p>
             </form>
         </div>
