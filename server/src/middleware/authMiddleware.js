@@ -3,7 +3,7 @@ const admin = require('../config/firebaseAdmin')
 async function authenticateUser(req, res, next) {
     const authHeader = req.headers.authorization
 
-    if (!authHeader || !authHeader.startsWith('Bearer')) {
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(401).json({
             success: false,
             message: 'Authentication token is required'
@@ -36,6 +36,8 @@ async function authenticateUser(req, res, next) {
                 message: 'Invalid or expired authentication token'
             })
         }
+
+        next(error)
     }
 }
 
