@@ -9,6 +9,7 @@ import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import VerifyEmail from './pages/VerifyEmail.jsx'
 import Dashboard from './pages/Dashboard.jsx'
+import ForgotPassword from './pages/ForgotPassword.jsx'
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
   {
     path: '/verify-email',
     element: <VerifyEmail />
+  },
+  {
+    path: '/forgot-password',
+    element: <ForgotPassword />
   },
   {
     path: '/dashboard',
