@@ -41,6 +41,7 @@ function Register () {
 
         if (password.length < 8) {
             setError('Password must be at least 8 charachters!')
+            return
         }
 
         if (confirmPassword.trim() === '') {
