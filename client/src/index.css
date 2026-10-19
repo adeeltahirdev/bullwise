@@ -133,6 +133,22 @@ body{
   background-color: rgb(56, 90, 194);
 }
 
+.forgot-link {
+    align-self: flex-end;
+    color: royalblue;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+.submit:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
 @keyframes pulse {
   from {
     transform: scale(0.9);

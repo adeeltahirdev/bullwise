@@ -8,6 +8,7 @@ import App from './App.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import VerifyEmail from './pages/VerifyEmail.jsx'
+import Dashboard from './pages/Dashboard.jsx'
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
   {
     path: '/verify-email',
     element: <VerifyEmail />
+  },
+  {
+    path: '/dashboard',
+    element: <Dashboard />
   }
 ])
 
