@@ -1,9 +1,10 @@
-const admin = require('firebase-admin')
+const {initializeApp, getApps, applicationDefault} = require('firebase-admin/app')
+const {getAuth} = require('firebase-admin/auth')
 
-if (!admin.apps.length) {
-    admin.initializeApp({
-        credential: admin.credential.applicationDefault(),
-    })
+const app = getApps().length ? getApps()[0] : initializeApp({
+    credential: applicationDefault()
+})
+
+module.exports = {
+    auth: getAuth(app)
 }
-
-module.exports = admin
