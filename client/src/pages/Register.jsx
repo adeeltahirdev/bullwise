@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import {auth} from '../config/firebase.js'
 import {createUserWithEmailAndPassword, sendEmailVerification, updateProfile} from 'firebase/auth'
 
@@ -13,6 +13,8 @@ function Register () {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
+
+    const navigate = useNavigate()
 
     async function handleSubmit(e) {
         e.preventDefault()
@@ -58,19 +60,62 @@ function Register () {
         try {
             setLoading(true)
 
+            console.log('1. Starting registration')
+
             const userCredential = await createUserWithEmailAndPassword(
                 auth,
                 email.trim(),
                 password
             )
 
+            console.log('2. Firebase account created')
+
             await updateProfile(userCredential.user, {
                 displayName: `${firstName.trim()} ${lastName.trim()}`
             })
 
+            console.log('3. Firebase display name updated')
+
             await sendEmailVerification(userCredential.user)
 
-            window.location.assign('/verify-email')
+            console.log('4. Verification email sent')
+
+            const token = await userCredential.user.getIdToken()
+
+            console.log('5. ID token obtained')
+            console.log('6. Backend URL:', import.meta.env.VITE_API_URL)
+
+            const response = await fetch(
+                `${import.meta.env.VITE_API_URL}/auth/profile`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        firstName: firstName.trim(),
+                        lastName: lastName.trim()
+                    })
+                }
+            )
+
+            console.log('7. Backend response status:', response.status)
+
+            let data
+
+            try {
+                data = await response.json()
+            } catch {
+                throw new Error('The server returned an invalid response')
+            }
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Unable to create your user profile')
+            }
+
+            console.log('Profile created:', data.user)
+            navigate('/verify-email')
         }
         catch (error) {
             console.error('Registration failed:', error.code)
@@ -83,10 +128,18 @@ function Register () {
                 'auth/too-many-requests': 'Too many attempts. Please try again later'
             }
 
-            setError(
-                message[error.code] || 
-                'Unable to create your account. Please try again'
-            )
+            if (error.code) {
+                setError(
+                    message[error.code] ||
+                    'Unable to create your account. Please try again'
+                )
+            } else if (error.message === 'Failed to fetch') {
+                setError(
+                    'Could not reach the server. Your account may already exist. Please try again.'
+                )
+            } else {
+                setError(error.message || 'Something went wrong. Please try again.')
+            }
         }
         finally {
             setLoading(false)

@@ -1,4 +1,4 @@
-const User = require('../models/userModel')
+const User = require('../models/User')
 const AppError = require('../utils/AppError')
 
 const createProfile = async ({uid, email, firstName, lastName}) => {
