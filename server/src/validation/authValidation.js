@@ -8,4 +8,12 @@ const createRegisterSchema = joi.object({
     confirmPassword: joi.string().valid(joi.ref('password')).required()
 }).unknown(false)
 
-module.exports = {createRegisterSchema}
+const createLoginSchema = joi.object({
+    email: joi.string().trim().email().max(254).required(),
+    password: joi.string().trim().required()
+}).unknown(false)
+
+module.exports = {
+    createRegisterSchema,
+    createLoginSchema
+}
