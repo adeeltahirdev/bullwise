@@ -1,7 +1,6 @@
 const { db, auth } = require('../config/firebaseAdmin')
 const { FieldValue } = require('firebase-admin/firestore')
 const AppError = require('../utils/AppError')
-const { json } = require('express')
 
 const firbaseKey = process.env.FIREBASE_API_KEY
 
@@ -279,10 +278,44 @@ const resendVerificationEmail = async (idToken) => {
     }
 }
 
+const refreshUserToken = async (refreshToken) => {
+    if (!refreshToken) {
+        throw new AppError('Refresh token is required', 401)
+    }
+
+    const response = await fetch(
+        `https://securetoken.googleapis.com/v1/token?key=${firbaseKey}`,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                grant_type: 'refresh_token',
+                refresh_token: refreshToken
+            })
+        }
+    )
+
+    const result = await response.json()
+
+    if (!response.ok) {
+        throw new AppError('You are logged out! Please login again')
+    }
+
+    return {
+        uid: result.user_id,
+        idToken: result.id_token,
+        refreshToken: result.refresh_token,
+        expiresIn: result.expires_in
+    }
+}
+
 
 module.exports = {
     registerUser,
     loginUser,
     forgotPassword,
-    resendVerificationEmail
+    resendVerificationEmail,
+    refreshUserToken
 }

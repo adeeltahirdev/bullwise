@@ -14,4 +14,6 @@ router.post('/forgot-password', validate(createForgotPasswordSchema), authContro
 
 router.post('/resend-verification-email', authenticateUser, authController.resendVerificationEmail)
 
+router.post('/refresh-token', authController.refreshUserToken)
+
 module.exports = router

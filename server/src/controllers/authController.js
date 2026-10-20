@@ -17,12 +17,21 @@ const registerUser = async (req, res, next) => {
 
 const loginUser = async (req, res, next) => {
     try {
-        const user = await authService.loginUser(req.body)
+        const result = await authService.loginUser(req.body)
+
+        const { refreshToken, ...userData } = result
+
+        res.cookie('bullwise_refresh', refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            path: '/auth',
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        })
 
         res.status(200).json({
             success: true,
-            message: 'You are logged in',
-            data: user
+            data: userData
         })
     } catch (err) {
         next(err)
@@ -55,9 +64,37 @@ const resendVerificationEmail = async (req, res, next) => {
     }
 }
 
+const refreshUserToken = async (req, res, next) => {
+    try {
+        const refreshToken = req.cookies?.bullwise_refresh
+
+        const result = await authService.refreshUserToken(refreshToken)
+
+        res.cookie('bullwise_refresh', result.refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            path: '/auth',
+            maxAge: 7 * 24 * 60 * 60 * 1000 
+        })
+
+        res.status(200).json({
+            success: true,
+            data: {
+                uid: result.uid,
+                idToken: result.idToken,
+                expiresIn: result.expiresIn
+            }
+        })
+    } catch (err) {
+        next(err)
+    }
+}
+
 module.exports = {
     registerUser,
     loginUser,
     forgotPassword,
-    resendVerificationEmail
+    resendVerificationEmail,
+    refreshUserToken
 }
