@@ -1,17 +1,13 @@
 const authService = require('../services/authService')
 
-const createProfile = async (req, res, next) => {
+const registerUser = async (req, res, next) => {
     try {
-        const user = await authService.createProfile({
-            uid: req.user.uid,
-            email: req.user.email,
-            firstName: req.body.firstName,
-            lastName: req.body.lastName
-        })
+        const user = await authService.registerUser(req.body)
 
-        return res.status(201).json({
+        res.status(201).json({
             success: true,
-            user
+            message: 'Account created successfully! You can now sign in to your account.',
+            data: user
         })
     } catch (err) {
         next(err)
@@ -19,5 +15,5 @@ const createProfile = async (req, res, next) => {
 }
 
 module.exports = {
-    createProfile
+    registerUser
 }
