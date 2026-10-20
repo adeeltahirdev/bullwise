@@ -86,12 +86,42 @@ const registerUser = async ({ firstName, lastName, email, password }) => {
         )
     }
 
+    let verificationEmailSent = false
+
+    try {
+        
+        const verificationResponse = await fetch(
+            `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${process.env.FIREBASE_API_KEY}`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    requestType: 'VERIFY_EMAIL',
+                    idToken
+                })
+            }
+        )
+
+        verificationEmailSent = verificationResponse.ok
+
+        if (!verificationResponse.ok) {
+            const verificationError = await verificationResponse.json()
+
+            console.error('Firebase verification email error:', verificationError.error?.message)
+        }
+    } catch (error) {
+        console.error('verification email request failed:', error.message)
+    }
+
     return {
         uid,
         email: result.email,
         idToken,
         refreshToken,
-        expiresIn: Number(expiresIn)
+        expiresIn: Number(expiresIn),
+        verificationEmailSent
     }
 }
 

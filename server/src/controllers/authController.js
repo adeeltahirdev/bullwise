@@ -6,7 +6,8 @@ const registerUser = async (req, res, next) => {
 
         res.status(201).json({
             success: true,
-            message: 'Account created successfully! You can now sign in to your account.',
+            message: user.verificationEmailSent ? 'Account created. Please check your email to verify your account' 
+            : 'Account created, but the verification email could not be requested',
             data: user
         })
     } catch (err) {
