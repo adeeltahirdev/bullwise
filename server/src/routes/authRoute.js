@@ -1,6 +1,7 @@
 const express = require('express')
 const authController = require('../controllers/authController')
 const validate = require('../middleware/validatationMiddleware')
+const authenticateUser = require('../middleware/authMiddleware')
 const { createRegisterSchema, createLoginSchema, createForgotPasswordSchema } = require('../validation/authValidation')
 
 const router = express.Router()
@@ -10,5 +11,7 @@ router.post('/register', validate(createRegisterSchema), authController.register
 router.post('/login', validate(createLoginSchema), authController.loginUser)
 
 router.post('/forgot-password', validate(createForgotPasswordSchema), authController.forgotPassword)
+
+router.post('/resend-verification-email', authenticateUser, authController.resendVerificationEmail)
 
 module.exports = router

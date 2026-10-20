@@ -1,6 +1,7 @@
 const { db, auth } = require('../config/firebaseAdmin')
 const { FieldValue } = require('firebase-admin/firestore')
 const AppError = require('../utils/AppError')
+const { json } = require('express')
 
 const firbaseKey = process.env.FIREBASE_API_KEY
 
@@ -227,8 +228,61 @@ const forgotPassword = async ({ email }) => {
     }
 }
 
+
+const resendVerificationEmail = async (idToken) => {
+    if (!firbaseKey) {
+        throw new AppError('Firebase API key is not configured', 500)
+    }
+
+    try {
+        const response = await fetch(
+            `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${firbaseKey}`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    requestType: 'VERIFY_EMAIL',
+                    idToken
+                })
+            }
+        )
+
+        const result = await response.json()
+
+        if (!response.ok) {
+            const firebaseError = result.error?.message
+
+            if (firebaseError === 'EMAIL_NOT_FOUND') {
+                throw new AppError('User account was not found', 404)
+            }
+
+            if (firebaseError === 'INVALID_ID_TOKEN' ||
+                firebaseError === 'TOKEN_EXPIRED') {
+                throw new AppError('Invalid or expired authentication token', 401)
+            }
+
+            throw new AppError(
+                'Unable to send verification email. Please try again.',
+                400
+            )
+        }
+
+        return { emailSent: true }
+    } catch (error) {
+        if (error instanceof AppError) {
+            throw error
+        }
+
+        throw new AppError('Unable to process verification request', 500)
+    }
+}
+
+
 module.exports = {
     registerUser,
     loginUser,
-    forgotPassword
+    forgotPassword,
+    resendVerificationEmail
 }

@@ -20,7 +20,8 @@ const authenticateUser = async (req, res, next) => {
         req.user = {
             uid: decodedToken.uid,
             email: decodedToken.email,
-            emailVerified: decodedToken.email_verified
+            emailVerified: decodedToken.email_verified,
+            idToken
         }
 
         next()

@@ -42,8 +42,22 @@ const forgotPassword = async (req, res, next) => {
     }
 }
 
+const resendVerificationEmail = async (req, res, next) => {
+    try {
+        await authService.resendVerificationEmail(req.user.idToken)
+
+        res.status(200).json({
+            success: true,
+            message: 'A verification email has been sent to you'
+        })
+    } catch (err) {
+        next(err)
+    }
+}
+
 module.exports = {
     registerUser,
     loginUser,
-    forgotPassword
+    forgotPassword,
+    resendVerificationEmail
 }
