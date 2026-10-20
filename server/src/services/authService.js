@@ -1,15 +1,16 @@
 const { db, auth } = require('../config/firebaseAdmin')
 const { FieldValue } = require('firebase-admin/firestore')
 const AppError = require('../utils/AppError')
-const { refreshToken } = require('firebase-admin/app')
+
+const firbaseKey = process.env.FIREBASE_API_KEY
 
 const registerUser = async ({ firstName, lastName, email, password }) => {
-    if (!process.env.FIREBASE_API_KEY) {
+    if (!firbaseKey) {
         throw new AppError('Firebase API key is not configured', 500)
     }
 
     const response = await fetch(
-        `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.FIREBASE_API_KEY}`,
+        `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${firbaseKey}`,
         {
             method: 'POST',
             headers: {
@@ -92,7 +93,7 @@ const registerUser = async ({ firstName, lastName, email, password }) => {
     try {
         
         const verificationResponse = await fetch(
-            `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${process.env.FIREBASE_API_KEY}`,
+            `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${firbaseKey}`,
             {
                 method: 'POST',
                 headers: {
@@ -127,12 +128,12 @@ const registerUser = async ({ firstName, lastName, email, password }) => {
 }
 
 const loginUser = async ({ email, password }) => {
-    if (!process.env.FIREBASE_API_KEY) {
+    if (!firbaseKey) {
         throw new AppError('Firebase API key is not configured', 500)
     }
 
     const response = await fetch(
-        `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.FIREBASE_API_KEY}`,
+        `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${firbaseKey}`,
         {
             method: 'POST',
             headers: {
@@ -180,7 +181,54 @@ const loginUser = async ({ email, password }) => {
     }
 }
 
+const forgotPassword = async ({ email }) => {
+    if (!firbaseKey) {
+        throw new AppError('Firebase API key is not configured', 500)
+    }
+
+    const response = await fetch(
+        `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${firbaseKey}`,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                requestType: 'PASSWORD_RESET',
+                email
+            })
+        }
+    )
+
+    const result = await response.json()
+
+    if (!response.ok) {
+        const firebaseError = result.error?.message
+
+         const errors = {
+            INVALID_EMAIL: ['Please provide a valid email address', 400],
+            USER_NOT_FOUND: ['Unable to process the password reset request', 400],
+            TOO_MANY_ATTEMPTS_TRY_LATER: [
+                'Too many attempts. Please try again later',
+                429
+            ]
+        }
+
+        const [message, statusCode] = errors[firebaseError] || [
+            'Unable to process the password reset request',
+            400
+        ]
+
+        throw new AppError(message, statusCode)
+    }
+
+    return {
+        emailSent: true
+    }
+}
+
 module.exports = {
     registerUser,
-    loginUser
+    loginUser,
+    forgotPassword
 }

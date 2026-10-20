@@ -13,7 +13,12 @@ const createLoginSchema = joi.object({
     password: joi.string().trim().required()
 }).unknown(false)
 
+const createForgotPasswordSchema = joi.object({
+    email: joi.string().trim().email().max(254).required()
+}).unknown(false)
+
 module.exports = {
     createRegisterSchema,
-    createLoginSchema
+    createLoginSchema,
+    createForgotPasswordSchema
 }

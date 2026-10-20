@@ -29,7 +29,21 @@ const loginUser = async (req, res, next) => {
     }
 }
 
+const forgotPassword = async (req, res, next) => {
+    try {
+        await authService.forgotPassword(req.body)
+
+        res.status(200).json({
+            success: true,
+            message: 'A link has been sent to you for resetting your password'
+        })
+    } catch (err) {
+        next(err)
+    }
+}
+
 module.exports = {
     registerUser,
-    loginUser
+    loginUser,
+    forgotPassword
 }
