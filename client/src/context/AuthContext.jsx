@@ -39,12 +39,18 @@ useEffect(() => {
                             setUser(profile)
                         }
                     } catch (error) {
-                        console.error('Failed to load profile:', error)
-                    } finally {
-                        if (active) {
-                            setLoading(false)
-                        }
-                    }
+    if (active) {
+        setUser(null)
+
+        if (!error.message.includes('User profile not found')) {
+            console.error('Failed to load profile:', error)
+        }
+    }
+} finally {
+    if (active) {
+        setLoading(false)
+    }
+}
                 },
                 (error) => {
                     console.error('Auth state error:', error)
@@ -75,11 +81,18 @@ useEffect(() => {
     }
 }, [])
 
+async function refreshProfile() {
+    const profile = await profileService.getProfile()
+    setUser(profile)
+    return profile
+}
+
 const value = {
     firebaseUser,
     user,
     setUser,
-    loading
+    loading,
+    refreshProfile
 }
 
 

@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import {auth} from '../config/firebase.js'
 import {createUserWithEmailAndPassword, sendEmailVerification, updateProfile} from 'firebase/auth'
+import { useAuth } from "../context/AuthContext.jsx"
 
 function Register () {
 
@@ -13,6 +14,8 @@ function Register () {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
+
+    const {refreshProfile} = useAuth()
 
     const navigate = useNavigate()
 
@@ -114,7 +117,8 @@ function Register () {
                 throw new Error(data.message || 'Unable to create your user profile')
             }
 
-            console.log('Profile created:', data.user)
+            console.log('Profile created:', data.data)
+            await refreshProfile()
             navigate('/verify-email')
         }
         catch (error) {
