@@ -311,11 +311,32 @@ const refreshUserToken = async (refreshToken) => {
     }
 }
 
+const getCurrentUser = async (uid) => {
+    const user = await auth.getUser(uid)
+
+    const userDoc = await db .collection('users').doc(uid).get()
+
+    if (!userDoc.exists) {
+        throw new AppError('User profile not found', 404)
+    }
+
+    const profile = userDoc.data()
+
+    return {
+        uid: user.uid,
+        email: user.email,
+        emailVerified: user.emailVerified,
+        firstName: profile.firstName,
+        lastName: profile.lastName
+    }
+}
+
 
 module.exports = {
     registerUser,
     loginUser,
     forgotPassword,
     resendVerificationEmail,
-    refreshUserToken
+    refreshUserToken,
+    getCurrentUser
 }

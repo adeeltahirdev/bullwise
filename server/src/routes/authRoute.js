@@ -18,4 +18,6 @@ router.post('/refresh-token', authController.refreshUserToken)
 
 router.post('/logout', authController.logoutUser)
 
+router.get('/profile', authenticateUser, authController.getCurrentUser)
+
 module.exports = router
