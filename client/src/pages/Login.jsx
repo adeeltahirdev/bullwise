@@ -2,19 +2,20 @@ import { reload, signInWithEmailAndPassword, signOut } from "firebase/auth"
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { auth } from "../config/firebase"
+import { useAuth } from "../context/AuthContext"
 
 function Login() {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
-    const [loading, setLoading] = useState(false)
+    const [submitting, setSubmitting] = useState(false)
 
+    const { setUser } = useAuth()
     const navigate = useNavigate()
 
     async function handleSubmit(e) {
         e.preventDefault()
-
         setError('')
 
         if (!email.trim() || !password) {
@@ -23,48 +24,42 @@ function Login() {
         }
 
         try {
-            setLoading(true)
+            setSubmitting(true)
 
-            const useCredential = await signInWithEmailAndPassword(
+            const credential = await signInWithEmailAndPassword(
                 auth,
                 email.trim(),
                 password
             )
 
-            const user = useCredential.user
+            await reload(credential.user)
 
-            await reload(user)
-
-            if (!auth.currentUser.emailVerified) {
+            if (!credential.user.emailVerified) {
                 await signOut(auth)
+                setUser(null)
                 navigate('/verify-email', { replace: true })
                 return
             }
 
+            setUser(auth.currentUser)
             navigate('/dashboard', { replace: true })
         } catch (err) {
             console.error('Login failed:', err.code)
 
-            const message = {
-                'auth/invalid-credential':
-                    'Invalid email or password.',
-                'auth/user-not-found':
-                    'Invalid email or password.',
-                'auth/wrong-password':
-                    'Invalid email or password.',
-                'auth/invalid-email':
-                    'Please enter a valid email address.',
-                'auth/too-many-requests':
-                    'Too many attempts. Please try again later.',
-                'auth/user-disabled':
-                    'This account has been disabled.',
+            const messages = {
+                'auth/invalid-credential': 'Invalid email or password.',
+                'auth/user-not-found': 'Invalid email or password.',
+                'auth/wrong-password': 'Invalid email or password.',
+                'auth/invalid-email': 'Please enter a valid email address.',
+                'auth/too-many-requests': 'Too many attempts. Please try again later.',
+                'auth/user-disabled': 'This account has been disabled.'
             }
 
             setError(
-                message[err.code] || 'Unable to sign in. Please try again' 
+                messages[err.code] || 'Unable to sign in. Please try again.'
             )
-        }finally {
-            setLoading(false)
+        } finally {
+            setSubmitting(false)
         }
     }
 
@@ -88,8 +83,8 @@ function Login() {
 
                 {error && <p className="error-message">{error}</p>}
 
-                <button className="submit" disabled={loading}>
-                    {loading ? 'Signing in...' : 'log in'}
+                <button className="submit" disabled={submitting}>
+                    {submitting ? 'Signing in...' : 'log in'}
                 </button>
                 <p className="signin">Don't have an account ? <Link to='/register'>Register</Link> </p>
             </form>
