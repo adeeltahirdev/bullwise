@@ -2,7 +2,6 @@ import { reload, signInWithEmailAndPassword, signOut } from "firebase/auth"
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { auth } from "../config/firebase"
-import { useAuth } from "../context/AuthContext"
 
 function Login() {
 
@@ -11,7 +10,6 @@ function Login() {
     const [error, setError] = useState('')
     const [submitting, setSubmitting] = useState(false)
 
-    const { setUser } = useAuth()
     const navigate = useNavigate()
 
     async function handleSubmit(e) {
@@ -36,13 +34,12 @@ function Login() {
 
             if (!credential.user.emailVerified) {
                 await signOut(auth)
-                setUser(null)
                 navigate('/verify-email', { replace: true })
                 return
             }
 
-            setUser(auth.currentUser)
             navigate('/dashboard', { replace: true })
+
         } catch (err) {
             console.error('Login failed:', err.code)
 

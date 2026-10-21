@@ -1,58 +1,87 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { onAuthStateChanged, setPersistence, browserLocalPersistence } from 'firebase/auth'
 import { auth } from '../config/firebase'
+import profileService from '../service/profileService'
 
 const AuthContext = createContext(null)
 
 export function AuthProvider ({children}) {
+    const [firebaseUser, setFirebaseUser] = useState(null)
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
 
+
 useEffect(() => {
-        let unsubscribe = null
-        let active = true
+    let active = true
+    let unsubscribe = null
 
-        async function initializeAuth() {
-            try {
-                await setPersistence(auth, browserLocalPersistence)
+    async function initializeAuth() {
+        try {
+            await setPersistence(auth, browserLocalPersistence)
 
-                if (!active) return
+            if (!active) return
 
-                unsubscribe = onAuthStateChanged(
-                    auth,
-                    (firebaseUser) => {
-                        setUser(firebaseUser)
+            unsubscribe = onAuthStateChanged(
+                auth,
+                async (currentUser) => {
+                    setFirebaseUser(currentUser)
+                    setUser(null)
+
+                    if (!currentUser) {
                         setLoading(false)
-                    },
-                    (error) => {
-                        console.error('Auth state error:', error)
+                        return
+                    }
+
+                    try {
+                        const profile = await profileService.getProfile()
+
+                        if (active) {
+                            setUser(profile)
+                        }
+                    } catch (error) {
+                        console.error('Failed to load profile:', error)
+                    } finally {
+                        if (active) {
+                            setLoading(false)
+                        }
+                    }
+                },
+                (error) => {
+                    console.error('Auth state error:', error)
+
+                    if (active) {
+                        setFirebaseUser(null)
                         setUser(null)
                         setLoading(false)
                     }
-                )
-            } catch (error) {
-                console.error('Auth initialization failed:', error)
-
-                if (active) {
-                    setUser(null)
-                    setLoading(false)
                 }
+            )
+        } catch (error) {
+            console.error('Auth initialization failed:', error)
+
+            if (active) {
+                setFirebaseUser(null)
+                setUser(null)
+                setLoading(false)
             }
         }
-
-        initializeAuth()
-
-        return () => {
-            active = false
-            unsubscribe?.()
-        }
-    }, [])
-
-    const value = {
-        user,
-        setUser,
-        loading
     }
+
+    initializeAuth()
+
+    return () => {
+        active = false
+        unsubscribe?.()
+    }
+}, [])
+
+const value = {
+    firebaseUser,
+    user,
+    setUser,
+    loading
+}
+
 
 
     return (
