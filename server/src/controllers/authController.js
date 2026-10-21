@@ -91,10 +91,29 @@ const refreshUserToken = async (req, res, next) => {
     }
 }
 
+const logoutUser = async (req, res, next) => {
+    try {
+        res.clearCookie('bulleise_refresh', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            path: '/auth'
+        })
+
+        res.status(200).json({
+            success: true,
+            message: 'Logged out successfully'
+        })
+    } catch (err) {
+        next(err)
+    }
+}
+
 module.exports = {
     registerUser,
     loginUser,
     forgotPassword,
     resendVerificationEmail,
-    refreshUserToken
+    refreshUserToken,
+    logoutUser
 }

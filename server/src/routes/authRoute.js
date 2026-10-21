@@ -16,4 +16,6 @@ router.post('/resend-verification-email', authenticateUser, authController.resen
 
 router.post('/refresh-token', authController.refreshUserToken)
 
+router.post('/logout', authController.logoutUser)
+
 module.exports = router
