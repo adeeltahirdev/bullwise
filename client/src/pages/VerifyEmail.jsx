@@ -1,19 +1,23 @@
 
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
     onAuthStateChanged,
     sendEmailVerification,
-    signOut,
+    reload,
 } from 'firebase/auth'
 
 import { auth } from '../config/firebase.js'
+import { useAuth } from '../context/AuthContext.jsx'
 
 function VerifyEmail() {
     const [user, setUser] = useState(auth.currentUser)
     const [message, setMessage] = useState('')
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
+
+    const navigate = useNavigate()
+    const {refreshProfile} = useAuth()
 
     useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -44,33 +48,36 @@ function VerifyEmail() {
         }
     }
 
-    async function handleCheckVerification() {
-        setError('')
-        setMessage('')
+async function handleCheckVerification() {
+    setError('')
+    setMessage('')
 
-        if (!auth.currentUser) {
-            setError('Please sign in to check your verification status.')
-            return
-        }
+    const currentUser = auth.currentUser
 
-        try {
-            setLoading(true)
-
-            await auth.currentUser.reload()
-
-            if (auth.currentUser.emailVerified) {
-                setMessage('Your email is verified! You can now sign in.')
-                await signOut(auth)
-            } else {
-                setError('Your email is not verified yet. Check your inbox.')
-            }
-        } catch (err) {
-            console.error('Verification check error:', err.code)
-            setError('Unable to check verification status. Try again.')
-        } finally {
-            setLoading(false)
-        }
+    if (!currentUser) {
+        setError('Please sign in to check your verification status.')
+        return
     }
+
+    try {
+        setLoading(true)
+
+        await reload(currentUser)
+
+        if (auth.currentUser?.emailVerified) {
+            await refreshProfile()
+            navigate('/dashboard', { replace: true })
+        } else {
+            setError('Your email is not verified yet. Check your inbox.')
+        }
+    } catch (err) {
+        console.error('Verification check error:', err)
+
+        setError('Unable to check verification status. Try again.')
+    } finally {
+        setLoading(false)
+    }
+}
 
     return (
         <div className="container">
