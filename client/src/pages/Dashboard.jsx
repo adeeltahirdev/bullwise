@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { signOut } from 'firebase/auth'
 import { auth } from '../config/firebase.js'
@@ -10,6 +10,39 @@ function Dashboard() {
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
+
+    const [account, setAccount] = useState(null)
+    const [accountLoading, setAccountLoading] = useState(true)
+    const [accountError, setAccountError] = useState('')
+
+    useEffect(() => {
+        let isMounted = true
+
+        const loadAccount = async () => {
+            try {
+                const data = await tradingService.getAccount()
+
+                if (isMounted) {
+                    setAccount(data)
+                }
+            } catch (error) {
+                if (isMounted) {
+                    setAccountError(error.message || 'Unable to load trading account')
+                }
+            }finally {
+                if (isMounted) {
+                    setAccountLoading(false)
+                }
+            }
+        }
+
+        loadAccount()
+
+        return () => {
+            isMounted = false
+        }
+
+    },[])
 
     async function handleSignOut() {
         setError('')
@@ -25,15 +58,6 @@ function Dashboard() {
             setError('Unable to sign out. Please try again.')
         } finally {
             setLoading(false)
-        }
-    }
-
-    const testTradingAccount = async () => {
-        try {
-            const account = await tradingService.getAccount()
-            console.log('Trading account: ', account)
-        } catch (error) {
-            console.error('Trading account request failed: ', error.message)
         }
     }
 
@@ -65,13 +89,39 @@ function Dashboard() {
                     {loading ? 'Signing out...' : 'Sign out'}
                 </button>
 
-                <button className='submit' onClick={testTradingAccount}>
-                    Trading
-                </button>
-
                 <p className="signin">
                     Need to sign in again? <Link to="/login">Login</Link>
                 </p>
+            </section>
+
+            <section>
+                <h2>Paper Trading Account</h2>
+
+                {accountLoading ? (
+                    <p>Loading account...</p>
+                ) : accountError ? (
+                    <p className='error-message'>{accountError}</p>
+                ) : account ? (
+                    <div>
+                        <p>Status: {account.status}</p>
+                        <p>Currency: {account.currency}</p>
+                        <p>Cash: {Number(account.cash).toLocaleString('en-us', {
+                            style: 'currency',
+                            currency: account.currency
+                        })}</p>
+                        <p>Portfolio Value: {Number(account.portfolioValue).toLocaleString('en-us', {
+                            style: 'currency',
+                            currency: account.currency
+                        })}</p>
+                        <p>Buying Power: {Number(account.buyingPower).toLocaleString('en-us', {
+                            style: 'currency',
+                            currency: account.currency
+                        })}</p>
+                    </div>
+                ) : (
+                    <p>No account data available</p>
+                )
+            }
             </section>
         </div>
     )
