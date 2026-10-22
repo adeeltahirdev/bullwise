@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { signOut } from 'firebase/auth'
 import { auth } from '../config/firebase.js'
 import { useAuth } from '../context/AuthContext.jsx'
+import tradingService from '../service/tradingService.js'
 
 function Dashboard() {
     const { user } = useAuth()
@@ -24,6 +25,15 @@ function Dashboard() {
             setError('Unable to sign out. Please try again.')
         } finally {
             setLoading(false)
+        }
+    }
+
+    const testTradingAccount = async () => {
+        try {
+            const account = await tradingService.getAccount()
+            console.log('Trading account: ', account)
+        } catch (error) {
+            console.error('Trading account request failed: ', error.message)
         }
     }
 
@@ -53,6 +63,10 @@ function Dashboard() {
                     disabled={loading}
                 >
                     {loading ? 'Signing out...' : 'Sign out'}
+                </button>
+
+                <button className='submit' onClick={testTradingAccount}>
+                    Trading
                 </button>
 
                 <p className="signin">
