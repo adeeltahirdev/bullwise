@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { signOut } from 'firebase/auth'
@@ -32,6 +31,10 @@ function Dashboard() {
         <div className="container">
             <section className="form">
                 <p className="title">Bullwise Dashboard</p>
+
+                <p className='message'>
+                    Welcome, {user?.firstName} {user?.lastName}
+                </p>
 
                 <p className="message">
                     You're signed in as {user?.email}.

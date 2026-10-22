@@ -9,7 +9,7 @@ const app = express()
 
 app.use(cors({
     origin: 'http://localhost:5173',
-    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }))
@@ -23,6 +23,11 @@ app.get('/health', (req, res) => {
         success: true,
         message: 'Bullwise API is running'
     })
+})
+
+app.use('/auth', (req, res, next) => {
+    res.set('Cache-Control', 'no-store')
+    next()
 })
 
 // API routes
