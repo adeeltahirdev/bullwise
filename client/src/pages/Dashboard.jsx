@@ -4,6 +4,7 @@ import { signOut } from 'firebase/auth'
 import { auth } from '../config/firebase.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import tradingService from '../service/tradingService.js'
+import TradingDashboard from '../components/TradingDashboard.jsx'
 
 function Dashboard() {
     const { user } = useAuth()
@@ -123,6 +124,8 @@ function Dashboard() {
                 )
             }
             </section>
+
+            <TradingDashboard />
         </div>
     )
 }

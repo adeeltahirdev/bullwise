@@ -1,8 +1,30 @@
 import apiFetch from "./api";
 
 const tradingService = {
-    async getAccount() {
-        const result = await apiFetch('/trading/account')
+    async getPortfolio() {
+        const result = await apiFetch('/trading/portfolio')
+        return result.data
+    },
+
+    async getQuote(symbol) {
+        const result = await apiFetch(`/trading/quote/${encodeURIComponent(symbol)}`)
+        return result.data
+    },
+
+    async placeOrder(order) {
+        const result = await apiFetch('/trading/orders', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(order)
+        })
+
+        return result.data
+    },
+
+    async getOrders() {
+        const result = await apiFetch('/trading/orders')
         return result.data
     }
 }

@@ -121,6 +121,8 @@ const placeOrder = async (uid, { symbol, side, quantity }) => {
         )
     }
 
+    await getOrCreatePortfolio(uid)
+
     const quote = await marketDataService.getPreviousClose(ticker)
     const price = quote.price
     const total = Math.round(price * quantity * 100) / 100
