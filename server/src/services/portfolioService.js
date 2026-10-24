@@ -215,6 +215,8 @@ const placeOrder = async (uid, { symbol, side, quantity }) => {
 }
 
 const getOrders = async (uid) => {
+    await getOrCreatePortfolio(uid)
+
     const portfolioRef = getPortfolioRef(uid)
 
     const snapshot = await portfolioRef

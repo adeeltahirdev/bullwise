@@ -1,7 +1,7 @@
 const axios = require('axios')
 const AppError = require('../utils/AppError')
 
-const apiKey = process.env.MASSIVE_API_URL
+const apiKey = process.env.MASSIVE_API_KEY
 
 const massiveClient = axios.create({
     baseURL: 'https://api.massive.com',
@@ -16,7 +16,7 @@ const getPreviousClose = async (symbol) => {
     }
 
     if (!apiKey) {
-        throw new AppError('Market data API key is no configured', 500)
+        throw new AppError('Market data API key is not configured', 500)
     }
 
     try {
