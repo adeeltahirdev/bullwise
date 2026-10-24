@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import tradingService from '../service/tradingService'
 import StockChart from './StockChart'
 import Watchlist from './Watchlist'
+import PortfolioAllocation from './PortfolioAllocation'
 
 const money = (value) => {
     if (value == null || !Number.isFinite(Number(value))) return '—'
@@ -358,6 +359,8 @@ function TradingDashboard() {
                     </div>
                 )}
             </section>
+
+            <PortfolioAllocation portfolio={portfolio} />
 
             <section className="trading-panel" aria-labelledby="holdings-heading">
                 <div className="trading-section-heading">

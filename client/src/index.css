@@ -857,3 +857,156 @@ body{
         flex-basis: 100%;
     }
 }
+
+.allocation-panel {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+    margin: 24px 0;
+    min-width: 0;
+}
+
+.allocation-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.allocation-heading h2 {
+    margin: 0 0 6px;
+}
+
+.allocation-heading p {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.allocation-total {
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.allocation-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    padding: 28px 0 12px;
+}
+
+.allocation-donut {
+    width: 230px;
+    height: 230px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+}
+
+.allocation-donut-center {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px;
+    text-align: center;
+}
+
+.allocation-donut-center span {
+    color: #64748b;
+    font-size: 12px;
+}
+
+.allocation-donut-center strong {
+    font-size: 15px;
+    overflow-wrap: anywhere;
+}
+
+.allocation-legend {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+}
+
+.allocation-legend li {
+    display: grid;
+    grid-template-columns: 10px minmax(65px, 1fr) 55px auto;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.allocation-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+}
+
+.allocation-label {
+    font-weight: 600;
+}
+
+.allocation-percentage {
+    color: #64748b;
+    text-align: right;
+    font-size: 13px;
+}
+
+.allocation-value {
+    text-align: right;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.allocation-note,
+.allocation-empty {
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+@media (max-width: 650px) {
+    .allocation-panel {
+        padding: 16px;
+    }
+
+    .allocation-content {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .allocation-donut {
+        width: 200px;
+        height: 200px;
+    }
+
+    .allocation-donut-center {
+        width: 125px;
+        height: 125px;
+    }
+
+    .allocation-legend {
+        width: 100%;
+    }
+
+    .allocation-legend li {
+        grid-template-columns: 10px minmax(45px, 1fr) 48px auto;
+        gap: 7px;
+    }
+
+    .allocation-value {
+        font-size: 12px;
+    }
+}
