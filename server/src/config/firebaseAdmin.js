@@ -1,10 +1,38 @@
-const {initializeApp, getApps, applicationDefault} = require('firebase-admin/app')
-const {getAuth} = require('firebase-admin/auth')
-const {getFirestore} = require('firebase-admin/firestore')
 
-const app = getApps().length ? getApps()[0] : initializeApp({ credential: applicationDefault() })
+const { db } = require('../config/firebaseAdmin')
+const { FieldValue } = require('firebase-admin/firestore')
+const AppError = require('../utils/AppError')
 
-const auth = getAuth(app)
-const db = getFirestore(app)
+const INITIAL_CASH = 100000
 
-module.exports = { auth, db }
+const getOrCreatePortfolio = async (uid) => {
+    if (!uid) {
+        throw new AppError('Authentication required', 401)
+    }
+
+    const portfolioRef = db.collection('portfolios').doc(uid)
+
+    return db.runTransaction(async (transaction) => {
+        const portfolioDoc = await transaction.get(portfolioRef)
+
+        if (portfolioDoc.exists) {
+            return portfolioDoc.data()
+        }
+
+        const portfolio = {
+            userId: uid,
+            cash: INITIAL_CASH,
+            positions: {},
+            createdAt: FieldValue.serverTimestamp(),
+            updatedAt: FieldValue.serverTimestamp()
+        }
+
+        transaction.create(portfolioRef, portfolio)
+
+        return portfolio
+    })
+}
+
+module.exports = {
+    getOrCreatePortfolio
+}
