@@ -85,6 +85,10 @@ const getPortfolio = async (uid) => {
         0
     )
 
+    const realizedProfitloss = Number(portfolio.realizedProfitloss) || 0
+
+    const totalProfitloss = realizedProfitloss + unrealizedProfitLoss
+
     return {
         userId: uid,
         cash: portfolio.cash,
@@ -93,7 +97,9 @@ const getPortfolio = async (uid) => {
         portfolioValue: portfolio.cash + marketValue,
         unrealizedProfitLoss,
         valuationComplete: pricedPositions.length === positions.length,
-        currency: 'USD'
+        currency: 'USD',
+        realizedProfitloss,
+        totalProfitloss
     }
 }
 
@@ -144,6 +150,8 @@ const placeOrder = async (uid, { symbol, side, quantity }) => {
         const portfolio = portfolioSnapshot.data()
         const cash = portfolio.cash
         const positions = { ...(portfolio.positions || {}) }
+        const realizedProfitloss = Number(portfolio.realizedProfitloss) || 0
+        let orderRealizedProfitloss = 0
         const existing = positions[ticker] || {
             quantity: 0,
             averagePrice: 0
@@ -185,9 +193,18 @@ const placeOrder = async (uid, { symbol, side, quantity }) => {
                 }
             }
 
+            orderRealizedProfitloss = Math.round(
+                (total - quantity * existing.averagePrice) * 100
+            ) / 100
+
+            const newRealizedProfitloss = Math.round(
+                (realizedProfitloss + orderRealizedProfitloss) * 100
+            ) / 100
+
             transaction.update(portfolioRef, {
                 cash: Math.round((cash + total) * 100) / 100,
                 positions,
+                realizedProfitloss: newRealizedProfitloss,
                 updatedAt: FieldValue.serverTimestamp()
             })
         }
@@ -202,6 +219,7 @@ const placeOrder = async (uid, { symbol, side, quantity }) => {
             total,
             priceType: 'previous_close',
             status: 'filled',
+            realizedProfitloss: orderRealizedProfitloss,
             createdAt: FieldValue.serverTimestamp()
         }
 

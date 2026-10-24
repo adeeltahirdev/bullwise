@@ -164,6 +164,8 @@ function TradingDashboard() {
     const marketValue = Number(portfolio.marketValue) || 0
     const portfolioValue = Number(portfolio.portfolioValue) || 0
     const unrealizedPL = Number(portfolio.unrealizedProfitLoss) || 0
+    const realizedPL = Number(portfolio.realizedProfitLoss) || 0
+    const totalPL = realizedPL + unrealizedPL
 
     const pricedPositions = positions.filter(
         (position) => position.marketValue != null
@@ -252,6 +254,40 @@ function TradingDashboard() {
                         Based on available previous closes
                     </p>
                 </article>
+
+
+                <article className="trading-card">
+                    <p className="trading-card-label">Realized P/L</p>
+                    <p
+                        className={`trading-card-value ${
+                            realizedPL > 0
+                                ? 'trading-positive'
+                                : realizedPL < 0
+                                ? 'trading-negative'
+                                : ''
+                        }`}
+                    >
+                        {money(realizedPL)}
+                    </p>
+                    <p className="trading-card-note">Profit or loss from completed sells</p>
+                </article>
+
+                <article className="trading-card">
+                    <p className="trading-card-label">Total P/L</p>
+                    <p
+                        className={`trading-card-value ${
+                            totalPL > 0
+                                ? 'trading-positive'
+                                : totalPL < 0
+                                ? 'trading-negative'
+                                : ''
+                        }`}
+                    >
+                        {money(totalPL)}
+                    </p>
+                    <p className="trading-card-note">Realized + unrealized P/L</p>
+                </article>
+
             </section>
 
             {!portfolio.valuationComplete && (
@@ -455,6 +491,7 @@ function TradingDashboard() {
                                     <th>Shares</th>
                                     <th>Price</th>
                                     <th>Total</th>
+                                    <th>Realized P/L</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
@@ -479,6 +516,17 @@ function TradingDashboard() {
                                         <td>{number(order.quantity)}</td>
                                         <td>{money(order.price)}</td>
                                         <td>{money(order.total)}</td>
+                                        <td
+                                            className={
+                                                Number(order.realizedProfitLoss) > 0
+                                                    ? 'trading-positive'
+                                                    : Number(order.realizedProfitLoss) < 0
+                                                    ? 'trading-negative'
+                                                    : ''
+                                            }
+                                        >
+                                            {money(order.realizedProfitLoss ?? 0)}
+                                        </td>
                                         <td>{order.status}</td>
                                     </tr>
                                 ))}
