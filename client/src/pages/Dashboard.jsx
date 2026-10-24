@@ -31,7 +31,7 @@ function Dashboard() {
 
     return (
         <main className="container">
-            <section className="form">
+            {/* <section className="form">
                 <p className="title">Bullwise Dashboard</p>
 
                 <p className="message">
@@ -60,7 +60,7 @@ function Dashboard() {
                 <p className="signin">
                     Need to sign in again? <Link to="/login">Login</Link>
                 </p>
-            </section>
+            </section> */}
 
             <section className="paper-trading-section">
                 <h2>Your Paper Trading Account</h2>
