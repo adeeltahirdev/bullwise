@@ -1,6 +1,6 @@
-
 import { useCallback, useEffect, useState } from 'react'
 import tradingService from '../service/tradingService'
+import StockChart from './StockChart'
 
 const money = (value) => {
     if (value == null || !Number.isFinite(Number(value))) return '—'
@@ -258,6 +258,8 @@ function TradingDashboard() {
                     may be incomplete.
                 </div>
             )}
+
+            <StockChart initialSymbol="AAPL" />
 
             <section className="trading-panel" aria-labelledby="trade-heading">
                 <div className="trading-section-heading">

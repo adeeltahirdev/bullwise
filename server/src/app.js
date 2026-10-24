@@ -1,9 +1,9 @@
-
 const express = require('express')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const authRoutes = require('./routes/authRoute')
 const tradingRoute = require('./routes/tradingRoute')
+const watchlistRoute = require('./routes/watchlistRoute')
 const errorMiddleware = require('./middleware/errorMiddleware')
 
 const app = express()
@@ -34,6 +34,7 @@ app.use('/auth', (req, res, next) => {
 // API routes
 app.use('/auth', authRoutes)
 app.use('/trading', tradingRoute)
+app.use('/trading/watvhlist', watchlistRoute)
 
 // Centralized error handling must be last
 app.use(errorMiddleware)

@@ -26,6 +26,12 @@ const tradingService = {
     async getOrders() {
         const result = await apiFetch('/trading/orders')
         return result.data
+    },
+
+    async getHistory(symbol, range = '1M') {
+        const result = await apiFetch(`/trading/history/${encodeURIComponent(symbol)}?range=${range}`)
+
+        return result.data
     }
 }
 
