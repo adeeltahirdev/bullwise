@@ -226,6 +226,13 @@ body{
     gap: 16px;
 }
 
+.trading-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
 .trading-eyebrow {
     margin-bottom: 8px;
     color: #6b7280;
@@ -459,6 +466,10 @@ body{
 
 .trading-button-secondary:hover:not(:disabled) {
     background: #f3f4f6;
+}
+
+.link {
+  text-decoration: none;
 }
 
 /* Quote preview */

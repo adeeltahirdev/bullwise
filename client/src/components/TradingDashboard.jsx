@@ -3,6 +3,7 @@ import tradingService from '../service/tradingService'
 import StockChart from './StockChart'
 import Watchlist from './Watchlist'
 import PortfolioAllocation from './PortfolioAllocation'
+import { Link } from 'react-router-dom'
 
 const money = (value) => {
     if (value == null || !Number.isFinite(Number(value))) return '—'
@@ -180,6 +181,10 @@ function TradingDashboard() {
                     <p className="trading-subtitle">
                         Practice trading with virtual funds.
                     </p>
+                </div>
+
+                <div className='trading-header-actions'>
+                    <Link to='/' className='trading-button trading-button-secondary link'>Home</Link>
                 </div>
 
                 <button
