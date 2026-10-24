@@ -65,9 +65,28 @@ const getOrders = async (req, res, next) => {
     }
 }
 
+
+const getHistoricalBars = async (req, res, next) => {
+    try {
+        const result = await marketDataService.getHistoricalBars(
+            req.params.symbol,
+            req.query.range || '1M'
+        )
+
+        res.status(200).json({
+            success: true,
+            data: result
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+
 module.exports = {
     getPortfolio,
     getQuote,
     createOrder,
-    getOrders
+    getOrders,
+    getHistoricalBars
 }
