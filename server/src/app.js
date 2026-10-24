@@ -34,7 +34,7 @@ app.use('/auth', (req, res, next) => {
 // API routes
 app.use('/auth', authRoutes)
 app.use('/trading', tradingRoute)
-app.use('/trading/watvhlist', watchlistRoute)
+app.use('/trading/watchlist', watchlistRoute)
 
 // Centralized error handling must be last
 app.use(errorMiddleware)

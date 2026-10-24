@@ -763,3 +763,97 @@ body{
         min-height: 320px;
     }
 }
+
+
+.watchlist-panel {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+    margin: 24px 0;
+    min-width: 0;
+}
+
+.watchlist-panel h2 {
+    margin-top: 0;
+}
+
+.watchlist-description {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.watchlist-form {
+    display: flex;
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.watchlist-form input {
+    flex: 1;
+    min-width: 0;
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+}
+
+.watchlist-form button,
+.watchlist-remove {
+    padding: 9px 13px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+.watchlist-form button {
+    background: #1d4ed8;
+    color: #ffffff;
+    border-color: #1d4ed8;
+}
+
+.watchlist-form button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.watchlist-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.watchlist-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.watchlist-symbol {
+    border: 0;
+    background: transparent;
+    color: #1d4ed8;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.watchlist-error {
+    color: #b91c1c;
+}
+
+@media (max-width: 600px) {
+    .watchlist-panel {
+        padding: 14px;
+    }
+
+    .watchlist-form {
+        flex-wrap: wrap;
+    }
+
+    .watchlist-form input {
+        flex-basis: 100%;
+    }
+}

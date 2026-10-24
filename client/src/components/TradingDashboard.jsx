@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import tradingService from '../service/tradingService'
 import StockChart from './StockChart'
+import Watchlist from './Watchlist'
 
 const money = (value) => {
     if (value == null || !Number.isFinite(Number(value))) return '—'
@@ -26,6 +27,7 @@ function TradingDashboard() {
     const [refreshing, setRefreshing] = useState(false)
     const [submitting, setSubmitting] = useState(false)
     const [checkingQuote, setCheckingQuote] = useState(false)
+    const [selectedSymbol, setSelectedSymbol] = useState('AAPL')
 
     const [error, setError] = useState('')
     const [message, setMessage] = useState('')
@@ -259,7 +261,9 @@ function TradingDashboard() {
                 </div>
             )}
 
-            <StockChart initialSymbol="AAPL" />
+            <Watchlist onSelectSymbol={setSelectedSymbol} />
+
+            <StockChart key={selectedSymbol} initialSymbol={selectedSymbol} />
 
             <section className="trading-panel" aria-labelledby="trade-heading">
                 <div className="trading-section-heading">

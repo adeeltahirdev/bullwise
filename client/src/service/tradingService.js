@@ -32,7 +32,28 @@ const tradingService = {
         const result = await apiFetch(`/trading/history/${encodeURIComponent(symbol)}?range=${range}`)
 
         return result.data
-    }
+    },
+
+    async getWatchlist() {
+    const result = await apiFetch('/trading/watchlist')
+    return result.data
+},
+
+async addToWatchlist(symbol) {
+    const result = await apiFetch('/trading/watchlist', {
+        method: 'POST',
+        body: JSON.stringify({ symbol })
+    })
+    return result.data
+},
+
+async removeFromWatchlist(symbol) {
+    const result = await apiFetch(
+        `/trading/watchlist/${encodeURIComponent(symbol)}`,
+        { method: 'DELETE' }
+    )
+    return result.data
+},
 }
 
 export default tradingService
