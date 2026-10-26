@@ -30,6 +30,11 @@ const authenticateUser = async (req, res, next) => {
             return next(error)
         }
 
+         console.error('Firebase token verification failed:', {
+            code: error.code,
+            message: error.message
+        })
+
         return next(new AppError('Invalid or expired authentication token', 401))
     }
 }
