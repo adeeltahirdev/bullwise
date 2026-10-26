@@ -1420,3 +1420,559 @@ body{
         width: 100%;
     }
 }
+
+
+/* =========================
+   Additional Responsive CSS
+   Append to the end of index.css
+   ========================= */
+
+/* Global responsive safeguards */
+
+html {
+    width: 100%;
+    min-width: 320px;
+    overflow-x: clip;
+}
+
+body {
+    width: 100%;
+    min-width: 320px;
+    overflow-wrap: break-word;
+}
+
+img,
+svg,
+video,
+canvas {
+    max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+button,
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+.container {
+    width: 100%;
+    padding: 24px;
+}
+
+.paper-trading-section {
+    width: 100%;
+    max-width: 1440px;
+    min-width: 0;
+    margin-inline: auto;
+}
+
+/* Forms: registration, login, forgot password */
+
+.form {
+    width: 100%;
+    max-width: 500px;
+    min-width: 0;
+}
+
+.form .flex > label {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.form label .input {
+    min-width: 0;
+    font-size: 16px;
+}
+
+.form .submit {
+    width: 100%;
+    min-height: 44px;
+}
+
+.error-message,
+.success-message {
+    overflow-wrap: anywhere;
+    line-height: 1.5;
+}
+
+.signin {
+    line-height: 1.6;
+}
+
+/* Dashboard header and controls */
+
+.trading-header {
+    flex-wrap: wrap;
+}
+
+.trading-header > *,
+.trading-header-actions > * {
+    min-width: 0;
+}
+
+.trading-header-actions {
+    flex-wrap: wrap;
+}
+
+.trading-section-heading {
+    flex-wrap: wrap;
+}
+
+.trading-form-actions {
+    align-items: center;
+}
+
+.trading-button {
+    max-width: 100%;
+    white-space: normal;
+}
+
+/* Chart controls */
+
+.stock-chart-header {
+    min-width: 0;
+}
+
+.stock-search {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.stock-search input {
+    flex: 1 1 100px;
+}
+
+.stock-chart-controls {
+    flex-wrap: wrap;
+}
+
+.stock-range-buttons {
+    flex-wrap: wrap;
+}
+
+.stock-range-buttons button,
+.stock-search button,
+.watchlist-form button {
+    min-height: 40px;
+}
+
+.stock-chart-canvas {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+/* Tables */
+
+.trading-table-wrapper {
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+}
+
+.trading-table {
+    min-width: 600px;
+}
+
+/* Watchlist */
+
+.watchlist-item {
+    min-width: 0;
+}
+
+.watchlist-item > * {
+    min-width: 0;
+}
+
+.watchlist-symbol {
+    overflow-wrap: anywhere;
+}
+
+/* Landing page */
+
+.landing-nav,
+.landing-hero,
+.landing-features,
+.landing-footer {
+    width: 100%;
+}
+
+.landing-logo {
+    flex-shrink: 0;
+}
+
+.landing-content,
+.landing-preview {
+    min-width: 0;
+}
+
+.landing-primary-button,
+.landing-nav-button,
+.landing-secondary-button,
+.landing-signin {
+    text-align: center;
+}
+
+.landing-preview-stats > div {
+    min-width: 0;
+}
+
+.landing-preview-stats strong {
+    overflow-wrap: anywhere;
+}
+
+/* =========================
+   Tablet: 768px and below
+   ========================= */
+
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    .paper-trading-section {
+        max-width: 100%;
+    }
+
+    .trading-header {
+        align-items: flex-start;
+    }
+
+    .trading-header-actions {
+        margin-left: 0;
+    }
+
+    .trading-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .trading-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .trading-form-actions {
+        grid-column: 1 / -1;
+    }
+
+    .stock-chart-panel,
+    .watchlist-panel,
+    .allocation-panel {
+        margin-block: 16px;
+    }
+
+    .landing-nav {
+        padding: 20px 24px;
+    }
+
+    .landing-hero {
+        padding: 56px 24px;
+        gap: 36px;
+    }
+
+    .landing-features {
+        padding: 24px 24px 56px;
+    }
+
+    .landing-footer {
+        padding: 22px 24px;
+    }
+}
+
+/* =========================
+   Mobile: 600px and below
+   ========================= */
+
+@media (max-width: 600px) {
+    .container {
+        padding: 14px;
+    }
+
+    /* Registration and login forms */
+
+    .container:has(> .form) {
+        align-items: flex-start;
+        padding: 24px 14px;
+    }
+
+    .form {
+        max-width: 100%;
+        padding: 20px 16px;
+        border-radius: 14px;
+        gap: 12px;
+    }
+
+    .title {
+        font-size: 25px;
+    }
+
+    .form .flex {
+        gap: 10px;
+    }
+
+    .form label .input {
+        padding: 12px 10px 20px;
+    }
+
+    .message,
+    .signin {
+        font-size: 13px;
+    }
+
+    /* Dashboard */
+
+    .trading-dashboard {
+        gap: 16px;
+    }
+
+    .trading-header {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .trading-header-actions {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .trading-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .trading-card {
+        padding: 14px;
+    }
+
+    .trading-panel {
+        padding: 16px 12px;
+    }
+
+    .trading-form {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .trading-form-actions {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .trading-form-actions .trading-button {
+        width: 100%;
+    }
+
+    /* Stock chart */
+
+    .stock-chart-panel,
+    .watchlist-panel,
+    .allocation-panel {
+        padding: 16px 12px;
+        margin-block: 14px;
+    }
+
+    .stock-chart-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .stock-search {
+        width: 100%;
+    }
+
+    .stock-search input {
+        width: 100%;
+        flex: 1 1 auto;
+    }
+
+    .stock-chart-controls {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .stock-range-buttons {
+        width: 100%;
+        gap: 6px;
+    }
+
+    .stock-range-buttons button {
+        flex: 1 1 auto;
+        padding: 9px 10px;
+    }
+
+    .stock-chart-canvas {
+        min-height: 280px;
+    }
+
+    /* Watchlist */
+
+    .watchlist-form {
+        flex-wrap: wrap;
+    }
+
+    .watchlist-form input {
+        flex: 1 1 100%;
+    }
+
+    .watchlist-form button {
+        width: 100%;
+    }
+
+    /* Portfolio allocation */
+
+    .allocation-content {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .allocation-donut {
+        width: 190px;
+        height: 190px;
+    }
+
+    .allocation-donut-center {
+        width: 120px;
+        height: 120px;
+    }
+
+    .allocation-legend {
+        width: 100%;
+    }
+
+    /* Landing page */
+
+    .landing-nav {
+        padding: 18px 16px;
+        gap: 12px;
+    }
+
+    .landing-logo {
+        font-size: 21px;
+    }
+
+    .landing-nav-actions {
+        gap: 12px;
+    }
+
+    .landing-nav-button {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    .landing-hero {
+        padding: 40px 18px 48px;
+        gap: 32px;
+    }
+
+    .landing-content h1 {
+        font-size: clamp(34px, 9vw, 48px);
+        letter-spacing: -1.5px;
+    }
+
+    .landing-description {
+        font-size: 15px;
+        line-height: 1.7;
+    }
+
+    .landing-hero-actions {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .landing-preview {
+        padding: 20px 16px;
+    }
+
+    .landing-preview-value {
+        margin-top: 28px;
+    }
+
+    .landing-features {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 24px;
+        padding: 12px 18px 44px;
+    }
+
+    .landing-footer {
+        padding: 20px 18px;
+        flex-wrap: wrap;
+    }
+}
+
+/* =========================
+   Small phones: 380px and below
+   ========================= */
+
+@media (max-width: 380px) {
+    .container {
+        padding: 10px;
+    }
+
+    .form {
+        padding: 18px 12px;
+    }
+
+    .form .flex {
+        flex-direction: column;
+    }
+
+    .trading-summary {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .trading-card-value {
+        font-size: 1.35rem;
+    }
+
+    .trading-panel {
+        padding: 14px 10px;
+    }
+
+    .stock-chart-panel,
+    .watchlist-panel,
+    .allocation-panel {
+        padding: 12px 10px;
+    }
+
+    .landing-nav {
+        padding-inline: 12px;
+    }
+
+    .landing-logo {
+        font-size: 19px;
+    }
+
+    .landing-nav-actions {
+        gap: 8px;
+    }
+
+    .landing-nav-button {
+        padding: 9px 10px;
+        font-size: 12px;
+    }
+
+    .landing-hero {
+        padding-inline: 14px;
+    }
+
+    .allocation-legend li {
+        grid-template-columns: 10px minmax(0, 1fr) 42px auto;
+        gap: 6px;
+    }
+}
+
+/* Respect users who prefer less animation */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
