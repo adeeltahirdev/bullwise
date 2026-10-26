@@ -53,7 +53,7 @@ function Register () {
             setError('Confirm your password')
             return
         }
-        
+
 
         if (password !== confirmPassword) {
             setError('Password does not match!')
@@ -63,7 +63,6 @@ function Register () {
         try {
             setLoading(true)
 
-            console.log('1. Starting registration')
 
             const userCredential = await createUserWithEmailAndPassword(
                 auth,
@@ -71,22 +70,17 @@ function Register () {
                 password
             )
 
-            console.log('2. Firebase account created')
 
             await updateProfile(userCredential.user, {
                 displayName: `${firstName.trim()} ${lastName.trim()}`
             })
 
-            console.log('3. Firebase display name updated')
 
             await sendEmailVerification(userCredential.user)
 
-            console.log('4. Verification email sent')
 
             const token = await userCredential.user.getIdToken()
 
-            console.log('5. ID token obtained')
-            console.log('6. Backend URL:', import.meta.env.VITE_API_URL)
 
             const response = await fetch(
                 `${import.meta.env.VITE_API_URL}/auth/profile`,
@@ -103,7 +97,6 @@ function Register () {
                 }
             )
 
-            console.log('7. Backend response status:', response.status)
 
             let data
 
@@ -168,13 +161,13 @@ function Register () {
                         <input required name="lastName" type="text" className="input" value={lastName} onChange={(e) => setLastName(e.target.value)}/>
                         <span>Lastname</span>
                     </label>
-                </div>  
-                        
+                </div>
+
                 <label>
                     <input required name="email" type="email" className="input" value={email} onChange={(e) => setEmail(e.target.value)}/>
                     <span>Email</span>
-                </label> 
-                    
+                </label>
+
                 <label>
                     <input required name="password" type="password" className="input" value={password} onChange={(e) => setPassword(e.target.value)}/>
                     <span>Password</span>
@@ -192,7 +185,7 @@ function Register () {
                 <p className="signin">Already have an acount ? <Link to='/login'>Signin</Link> </p>
             </form>
         </div>
-        
+
     )
 }
 
