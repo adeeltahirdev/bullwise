@@ -9,7 +9,7 @@ const errorMiddleware = require('./middleware/errorMiddleware')
 const app = express()
 
 app.use(cors({
-    origin: 'https://bullwise-akmc.vercel.app/',
+    origin: process.env.CORS_URL,
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
