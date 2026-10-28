@@ -5,12 +5,6 @@ const authenticateUser = async (req, res, next) => {
     try {
         const authorization = req.headers.authorization
 
-        console.log('[Auth Debug]', {
-        path: req.originalUrl,
-        hasAuthorization: Boolean(authorization),
-        bearerFormat: authorization?.startsWith('Bearer ')
-         })
-
         if (!authorization || !authorization.startsWith('Bearer ')) {
             throw new AppError('Authentication required', 401)
         }
@@ -22,11 +16,6 @@ const authenticateUser = async (req, res, next) => {
         }
 
         const decodedToken = await auth.verifyIdToken(idToken)
-
-        console.log('[Auth Debug] Firebase token verified', {
-        uidPresent: Boolean(decodedToken.uid),
-        emailVerified: decodedToken.email_verified
-        })
 
         req.user = {
             uid: decodedToken.uid,
