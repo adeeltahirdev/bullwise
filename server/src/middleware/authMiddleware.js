@@ -5,6 +5,12 @@ const authenticateUser = async (req, res, next) => {
     try {
         const authorization = req.headers.authorization
 
+        console.log('[Auth Debug]', {
+        path: req.originalUrl,
+        hasAuthorization: Boolean(authorization),
+        bearerFormat: authorization?.startsWith('Bearer ')
+         })
+
         if (!authorization || !authorization.startsWith('Bearer ')) {
             throw new AppError('Authentication required', 401)
         }
