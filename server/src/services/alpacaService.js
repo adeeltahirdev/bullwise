@@ -35,6 +35,13 @@ const getPositions = async () => {
         const { data } = await api.get('/positions')
         return data
     } catch (error) {
+        console.error('Alpaca request failed:', {
+        operation: 'getPositions', // Use 'getOrders' in getOrders()
+        status: error.response?.status,
+        response: error.response?.data,
+        message: error.message
+    })
+
         throw new AppError(
             'Failed to retrieve Alpaca positions',
             error.response?.status || 502
@@ -53,6 +60,13 @@ const getOrders = async () => {
         })
         return data
     } catch (error) {
+        console.error('Alpaca request failed:', {
+        operation: 'getOrders', // Use 'getOrders' in getOrders()
+        status: error.response?.status,
+        response: error.response?.data,
+        message: error.message
+    })
+
         throw new AppError(
             'Failed to retrieve Alpaca orders',
             error.response?.status || 502
