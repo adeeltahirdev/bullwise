@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser')
 const authRoutes = require('./routes/authRoute')
 const tradingRoute = require('./routes/tradingRoute')
 const watchlistRoute = require('./routes/watchlistRoute')
+const snaptradeRoute = require('./routes/snaptradeRoute')
 const errorMiddleware = require('./middleware/errorMiddleware')
 
 const app = express()
@@ -35,6 +36,7 @@ app.use('/auth', (req, res, next) => {
 app.use('/auth', authRoutes)
 app.use('/trading', tradingRoute)
 app.use('/trading/watchlist', watchlistRoute)
+app.use('/trading/snaptrade', snaptradeRoute)
 
 // Centralized error handling must be last
 app.use(errorMiddleware)
