@@ -4,6 +4,7 @@ import StockChart from './StockChart'
 import Watchlist from './Watchlist'
 import PortfolioAllocation from './PortfolioAllocation'
 import { Link } from 'react-router-dom'
+import ConnectBrokerage from './ConnectBrokerage'
 
 const money = (value) => {
     if (value == null || !Number.isFinite(Number(value))) return '—'
@@ -214,6 +215,8 @@ function TradingDashboard() {
                     {message}
                 </div>
             )}
+
+            <ConnectBrokerage />
 
             <section className="trading-summary" aria-label="Account summary">
                 <article className="trading-card">
