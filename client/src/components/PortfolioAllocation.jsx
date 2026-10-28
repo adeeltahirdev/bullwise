@@ -40,6 +40,8 @@ function PortfolioAllocation({ portfolio }) {
         ].filter((item) => item.value > 0)
 
         const total = items.reduce((sum, item) => sum + item.value, 0)
+        const accountEquity = Number(portfolio?.portfolioValue)
+        const displayedTotal = Number.isFinite(accountEquity) && accountEquity >= 0 ? accountEquity : total
 
         let currentAngle = 0
 
@@ -62,7 +64,7 @@ function PortfolioAllocation({ portfolio }) {
             ).join(', ')})`
             : '#e2e8f0'
 
-        return { segments, total, gradient }
+        return { segments, total, gradient, displayedTotal }
     }, [portfolio])
 
     const hasUnpricedPositions = (portfolio?.positions || []).some(
@@ -77,11 +79,11 @@ function PortfolioAllocation({ portfolio }) {
                     <p>Cash and the value of your priced holdings</p>
                 </div>
                 <span className="allocation-total">
-                    {money(allocation.total)}
+                    {money(allocation.displayedTotal)}
                 </span>
             </div>
 
-            {allocation.total === 0 ? (
+            {allocation.segments.length === 0 ? (
                 <p className="allocation-empty">
                     No portfolio value is available to display yet.
                 </p>
@@ -95,7 +97,7 @@ function PortfolioAllocation({ portfolio }) {
                     >
                         <div className="allocation-donut-center">
                             <span>Total value</span>
-                            <strong>{money(allocation.total)}</strong>
+                            <strong>{money(allocation.displayedTotal)}</strong>
                         </div>
                     </div>
 
