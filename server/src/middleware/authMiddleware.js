@@ -23,6 +23,11 @@ const authenticateUser = async (req, res, next) => {
 
         const decodedToken = await auth.verifyIdToken(idToken)
 
+        console.log('[Auth Debug] Firebase token verified', {
+        uidPresent: Boolean(decodedToken.uid),
+        emailVerified: decodedToken.email_verified
+        })
+
         req.user = {
             uid: decodedToken.uid,
             email: decodedToken.email,
