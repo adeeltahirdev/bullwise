@@ -121,8 +121,58 @@ const getAccounts = async (firebaseUid) => {
 }
 
 
+const getPositions = async (firebaseUid, accountId) => {
+    if (!firebaseUid) {
+        throw new AppError('Authentication required', 401)
+    }
+
+    if (!accountId || typeof accountId !== 'string') {
+        throw new AppError('A valid account ID is required', 400)
+    }
+
+    const userRef = db.collection('snaptradeUsers').doc(firebaseUid)
+    const userSnapshot = await userRef.get()
+
+    if (!userSnapshot.exists) {
+        throw new AppError('SnapTrade user is not registered', 404)
+    }
+
+    const { snaptradeUserId, userSecret } = userSnapshot.data()
+
+    // Verify that the requested account belongs to this user.
+    const accountsResponse =
+        await snaptrade.accountInformation.listUserAccounts({
+            userId: snaptradeUserId,
+            userSecret
+        })
+
+    const accounts = accountsResponse.data
+
+    const accountExists = Array.isArray(accounts) &&
+        accounts.some(account => account.id === accountId)
+
+    if (!accountExists) {
+        throw new AppError(
+            'Brokerage account not found for this user',
+            404
+        )
+    }
+
+    const response =
+        await snaptrade.accountInformation.getAllAccountPositions({
+            accountId,
+            userId: snaptradeUserId,
+            userSecret
+        })
+
+    return response.data
+}
+
+
+
 module.exports = {
     registerUser,
     generateConnectionUrl,
-    getAccounts
+    getAccounts,
+    getPositions
 }

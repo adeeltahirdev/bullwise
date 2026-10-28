@@ -43,8 +43,28 @@ const getAccounts = async (req, res, next) => {
 }
 
 
+const getPositions = async (req, res, next) => {
+    try {
+        const { accountId } = req.params
+
+        const positions = await snaptradeService.getPositions(
+            req.user.uid,
+            accountId
+        )
+
+        res.status(200).json({
+            success: true,
+            data: positions
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+
 module.exports = {
     registerUser,
     generateConnectionUrl,
-    getAccounts
+    getAccounts,
+    getPositions
 }

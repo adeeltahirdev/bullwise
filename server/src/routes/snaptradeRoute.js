@@ -12,4 +12,6 @@ router.post('/connect', snaptradeController.generateConnectionUrl)
 
 router.get('/accounts', snaptradeController.getAccounts)
 
+router.get('/accounts/:accountId/positions', snaptradeController.getPositions)
+
 module.exports = router
