@@ -5,6 +5,7 @@ import Watchlist from './Watchlist'
 import PortfolioAllocation from './PortfolioAllocation'
 import { Link } from 'react-router-dom'
 import ConnectBrokerage from './ConnectBrokerage'
+import SnapTradeAccounts from './SnapTradeAccounts'
 
 const money = (value) => {
     if (value == null || !Number.isFinite(Number(value))) return '—'
@@ -217,6 +218,7 @@ function TradingDashboard() {
             )}
 
             <ConnectBrokerage />
+            <SnapTradeAccounts />
 
             <section className="trading-summary" aria-label="Account summary">
                 <article className="trading-card">

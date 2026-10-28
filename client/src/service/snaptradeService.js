@@ -49,3 +49,23 @@ export const createSnapTradeConnection = async () => {
 
     return result.data.redirectURI
 }
+
+
+export const getSnapTradeAccounts = async () => {
+    const token = await getToken()
+
+    const response = await fetch(`${API_URL}/trading/snaptrade/accounts`, {
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+
+    const result = await response.json()
+
+    if (!response.ok) {
+        throw new Error(result.message || 'Could not retrieve brokerage accounts.')
+    }
+
+    return result.data
+}
