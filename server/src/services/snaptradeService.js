@@ -1,6 +1,7 @@
 
 const { Snaptrade, SnaptradeAuth } = require('snaptrade-typescript-sdk')
-const admin = require('../config/firebaseAdmin')
+const { db } = require('../config/firebaseAdmin')
+const { FieldValue } = require('firebase-admin/firestore')
 const AppError = require('../utils/AppError')
 
 const clientId = process.env.SNAPTRADE_CLIENT_ID
@@ -16,8 +17,6 @@ const snaptrade = new Snaptrade({
         consumerKey
     })
 })
-
-const db = admin.firestore()
 
 const registerUser = async (firebaseUid) => {
     if (!firebaseUid) {
@@ -54,7 +53,7 @@ const registerUser = async (firebaseUid) => {
         firebaseUid,
         snaptradeUserId: userId,
         userSecret,
-        createdAt: admin.firestore.FieldValue.serverTimestamp()
+        createdAt: FieldValue.serverTimestamp()
     })
 
     return {
