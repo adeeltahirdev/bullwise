@@ -3,13 +3,7 @@ const { initializeApp, getApps, cert } =
 const { getAuth } = require('firebase-admin/auth')
 const { getFirestore } = require('firebase-admin/firestore')
 
-const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT_JSON
-
-if (!serviceAccountJson) {
-    throw new Error('FIREBASE_SERVICE_ACCOUNT_JSON is not configured')
-}
-
-const serviceAccount = JSON.parse(serviceAccountJson)
+const serviceAccount = require('../../serviceAccountKey.json')
 
 const app = getApps().length
     ? getApps()[0]
