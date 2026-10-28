@@ -2,27 +2,27 @@ const alpacaService = require('../services/alpacaService')
 const AppError = require('../utils/AppError')
 
 const getPortfolio = async () => {
-    cosnt [account, brokerPositions] = await Promise.all([
+    const [account, brokerPositions] = await Promise.all([
         alpacaService.getAccount(),
         alpacaService.getPositions()
     ])
 
-    const posittions = brokerPositions.map((posittion) => ({
-        symbol: posittion.symbol,
-        quantity: Number(posittion.qty),
-        averagePrice: Number(posittion.avg_entry_price),
-        currentPrice: Number(posittion.current_price),
-        marketValue: Number(posittion.market_value),
-        unrealizedProfitLoss: Number(posittion.unrealized_pl),
-        unrealizedProfitLossPercent: Number(posittion.unrealized_plpc) *100
+    const positions = brokerPositions.map((position) => ({
+        symbol: position.symbol,
+        quantity: Number(position.qty),
+        averagePrice: Number(position.avg_entry_price),
+        currentPrice: Number(position.current_price),
+        marketValue: Number(position.market_value),
+        unrealizedProfitLoss: Number(position.unrealized_pl),
+        unrealizedProfitLossPercent: Number(position.unrealized_plpc) * 100
     }))
 
-    const marketValue = posittions.reduce(
-        (total, posittion) => total + posittion.marketValue, 0
+    const marketValue = positions.reduce(
+        (total, position) => total + position.marketValue, 0
     )
 
-    const unrealizedProfitLoss = posittions.reduce(
-        (total, posittion) => total + posittion.unrealizedProfitLoss, 0
+    const unrealizedProfitLoss = positions.reduce(
+        (total, position) => total + position.unrealizedProfitLoss, 0
     )
 
     return {
@@ -37,7 +37,7 @@ const getPortfolio = async () => {
         equity: Number(account.equity),
         lastEquity: Number(account.last_equity),
         unrealizedProfitLoss,
-        posittions
+        positions
     }
 }
 
@@ -55,10 +55,30 @@ const placeOrder = async (uid, { symbol, side, quantity }) => {
 
 const getOrders = async (uid) => {
     if (!uid) {
-        throw new AppError('Authnetication required', 401)
+        throw new AppError('Authentication required', 401)
     }
 
-    return alpacaService.getOrders()
+    const brokerOrders = await alpacaService.getOrders()
+
+    return brokerOrders.map((order) => {
+        const quantity = Number(order.qty)
+        const filledQuantity = Number(order.filled_qty || 0)
+
+        const price = order.filled_avg_price == null
+            ? null : Number(order.filled_avg_price)
+
+        return {
+            id: order.id,
+            createdAt: order.submitted_at || order.created_at,
+            Symbol: order.symbol,
+            side: order.side,
+            quantity,
+            filledQuantity,
+            price,
+            total: price == null ? null : price * filledQuantity,
+            status: order.status
+        }
+    })
 }
 
 module.exports = {

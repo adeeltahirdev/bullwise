@@ -116,10 +116,13 @@ function TradingDashboard() {
                 quantity: parsedQuantity
             })
 
+            const orderStatus = order.status || 'accepted'
+            const orderQuantity = order.qty ?? order.quantity ?? parsedQuantity
+
             setMessage(
-                `${side === 'buy' ? 'Bought' : 'Sold'} ` +
-                `${number(order.quantity)} ${order.symbol} at ` +
-                `${money(order.price)} per share.`
+                `${side === 'buy' ? 'Buy' : 'Sell'} order for ` +
+                `${number(orderQuantity)} ${order.symbol || ticker} submitted. ` +
+                `Status: ${orderStatus.replaceAll('_', ' ')}.`
             )
 
             setQuote(null)
@@ -165,12 +168,6 @@ function TradingDashboard() {
     const marketValue = Number(portfolio.marketValue) || 0
     const portfolioValue = Number(portfolio.portfolioValue) || 0
     const unrealizedPL = Number(portfolio.unrealizedProfitLoss) || 0
-    const realizedPL = Number(portfolio.realizedProfitLoss) || 0
-    const totalPL = realizedPL + unrealizedPL
-
-    const pricedPositions = positions.filter(
-        (position) => position.marketValue != null
-    )
 
     return (
         <div className="trading-dashboard">
@@ -200,8 +197,9 @@ function TradingDashboard() {
             <div className="trading-notice">
                 <span aria-hidden="true">ⓘ</span>
                 <p>
-                    Simulated trades only. Orders use the previous daily
-                    closing price, not a live quote or a real market execution.
+                    Alpaca paper trading. Market orders are submitted for execution
+                    and may not fill immediately. Account balances, positions, and
+                    order statuses come from your Alpaca paper account.
                 </p>
             </div>
 
@@ -256,52 +254,10 @@ function TradingDashboard() {
                         {money(unrealizedPL)}
                     </p>
                     <p className="trading-card-note">
-                        Based on available previous closes
+                        Reported by Alpaca for current positions
                     </p>
                 </article>
-
-
-                <article className="trading-card">
-                    <p className="trading-card-label">Realized P/L</p>
-                    <p
-                        className={`trading-card-value ${
-                            realizedPL > 0
-                                ? 'trading-positive'
-                                : realizedPL < 0
-                                ? 'trading-negative'
-                                : ''
-                        }`}
-                    >
-                        {money(realizedPL)}
-                    </p>
-                    <p className="trading-card-note">Profit or loss from completed sells</p>
-                </article>
-
-                <article className="trading-card">
-                    <p className="trading-card-label">Total P/L</p>
-                    <p
-                        className={`trading-card-value ${
-                            totalPL > 0
-                                ? 'trading-positive'
-                                : totalPL < 0
-                                ? 'trading-negative'
-                                : ''
-                        }`}
-                    >
-                        {money(totalPL)}
-                    </p>
-                    <p className="trading-card-note">Realized + unrealized P/L</p>
-                </article>
-
             </section>
-
-            {!portfolio.valuationComplete && (
-                <div className="trading-alert trading-alert-warning">
-                    Some holdings could not be priced. The displayed portfolio
-                    value excludes their unpriced market value, so the total
-                    may be incomplete.
-                </div>
-            )}
 
             <Watchlist onSelectSymbol={setSelectedSymbol} />
 
@@ -425,7 +381,7 @@ function TradingDashboard() {
                                     <th>Stock</th>
                                     <th>Shares</th>
                                     <th>Average cost</th>
-                                    <th>Previous close</th>
+                                    <th>Current Price</th>
                                     <th>Market value</th>
                                     <th>Unrealized P/L</th>
                                 </tr>
@@ -475,7 +431,7 @@ function TradingDashboard() {
                 <div className="trading-section-heading">
                     <div>
                         <h2 id="orders-heading">Order history</h2>
-                        <p>Your most recent simulated trades.</p>
+                        <p>Your latest orders submitted to Alpaca.</p>
                     </div>
                     <span className="trading-count">{orders.length}</span>
                 </div>
@@ -483,7 +439,7 @@ function TradingDashboard() {
                 {orders.length === 0 ? (
                     <div className="trading-empty">
                         <h3>No orders yet</h3>
-                        <p>Your completed simulated trades will appear here.</p>
+                        <p>Your orders will appear here after submission.</p>
                     </div>
                 ) : (
                     <div className="trading-table-wrapper">
@@ -496,8 +452,7 @@ function TradingDashboard() {
                                     <th>Shares</th>
                                     <th>Price</th>
                                     <th>Total</th>
-                                    <th>Realized P/L</th>
-                                    <th>Status</th>
+                                    <th>Filled / Requested</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -518,20 +473,9 @@ function TradingDashboard() {
                                                 {order.side}
                                             </span>
                                         </td>
-                                        <td>{number(order.quantity)}</td>
+                                        <td>{number(order.filledQuantity)} / {number(order.quantity)}</td>
                                         <td>{money(order.price)}</td>
                                         <td>{money(order.total)}</td>
-                                        <td
-                                            className={
-                                                Number(order.realizedProfitLoss) > 0
-                                                    ? 'trading-positive'
-                                                    : Number(order.realizedProfitLoss) < 0
-                                                    ? 'trading-negative'
-                                                    : ''
-                                            }
-                                        >
-                                            {money(order.realizedProfitLoss ?? 0)}
-                                        </td>
                                         <td>{order.status}</td>
                                     </tr>
                                 ))}
