@@ -3,19 +3,12 @@ const { initializeApp, getApps, cert } =
 const { getAuth } = require('firebase-admin/auth')
 const { getFirestore } = require('firebase-admin/firestore')
 
-const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT
+const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_JSON
 
-if (!serviceAccountJson) {
+if (!serviceAccount) {
     throw new Error('FIREBASE_SERVICE_ACCOUNT environment variable is missing')
 }
 
-let serviceAccount
-
-try {
-    serviceAccount = JSON.parse(serviceAccountJson)
-} catch {
-    throw new Error('FIREBASE_SERVICE_ACCOUNT must contain valid JSON')
-}
 
 const app = getApps().length
     ? getApps()[0]
