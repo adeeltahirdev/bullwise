@@ -7,6 +7,9 @@ const router = express.Router()
 router.use(authMiddleware)
 
 router.post('/register', snaptradeController.registerUser)
+
 router.post('/connect', snaptradeController.generateConnectionUrl)
+
+router.get('/accounts', snaptradeController.getAccounts)
 
 module.exports = router

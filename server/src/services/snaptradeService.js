@@ -97,7 +97,32 @@ const generateConnectionUrl = async (firebaseUid) => {
     return { redirectURI: response.data.redirectURI }
 }
 
+
+const getAccounts = async (firebaseUid) => {
+    if (!firebaseUid) {
+        throw new AppError('Authentication required', 401)
+    }
+
+    const userRef = db.collection('snaptradeUsers').doc(firebaseUid)
+    const userSnapshot = await userRef.get()
+
+    if (!userSnapshot.exists) {
+        throw new AppError('SnapTrade user is not registered', 404)
+    }
+
+    const { snaptradeUserId, userSecret } = userSnapshot.data()
+
+    const response = await snaptrade.accountInformation.listUserAccounts({
+        userId: snaptradeUserId,
+        userSecret
+    })
+
+    return response.data
+}
+
+
 module.exports = {
     registerUser,
-    generateConnectionUrl
+    generateConnectionUrl,
+    getAccounts
 }
