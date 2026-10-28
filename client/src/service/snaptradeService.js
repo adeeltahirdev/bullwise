@@ -69,3 +69,28 @@ export const getSnapTradeAccounts = async () => {
 
     return result.data
 }
+
+
+export const getSnapTradePositions = async (accountId) => {
+    const token = await getToken()
+
+    const response = await fetch(
+        `${API_URL}/trading/snaptrade/accounts/${encodeURIComponent(accountId)}/positions`,
+        {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    )
+
+    const result = await response.json()
+
+    if (!response.ok) {
+        throw new Error(
+            result.message || 'Could not retrieve brokerage positions.'
+        )
+    }
+
+    return result.data
+}
